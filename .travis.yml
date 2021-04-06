@@ -5,7 +5,6 @@ matrix:
         - dist: bionic
         - dist: focal
 
-  # - git clone -v --progress https://github.com/doronhi/realsense.git  # This is Done automatically by TravisCI
 before_install:
   - if [[ $(lsb_release -sc) == "xenial" ]]; then _python=python; _ros_dist=kinetic;
     elif [[ $(lsb_release -sc) == "bionic" ]]; then _python=python; _ros_dist=melodic;
@@ -19,7 +18,6 @@ before_install:
   - sudo apt-get install librealsense2-dev --allow-unauthenticated -y
 
 install:
-  # install ROS:
   - echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ros-latest.list
   - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
   - sudo apt-get update -qq
@@ -34,8 +32,7 @@ install:
   - source ~/.bashrc
   - mkdir -p ~/catkin_ws/src/realsense
 
-  # install realsense2-camera
-  - mv * ~/catkin_ws/src/realsense/     # This leaves behind .git, .gitignore and .travis.yml but no matter.
+  - mv * ~/catkin_ws/src/realsense/ 
   - cd ~/catkin_ws/src/
   - catkin_init_workspace
   - cd ..
@@ -47,13 +44,11 @@ install:
   - echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
   - source ~/.bashrc
 
-    # download data:
   - bag_filename="https://librealsense.intel.com/rs-tests/TestData/outdoors_1color.bag";
   - wget $bag_filename -P "records/"
   - bag_filename="https://librealsense.intel.com/rs-tests/D435i_Depth_and_IMU_Stands_still.bag";
   - wget $bag_filename -P "records/"
-  
-  # Run test:
+ 
 script:
   - $_python src/realsense/realsense2_camera/scripts/rs2_test.py --all
 
